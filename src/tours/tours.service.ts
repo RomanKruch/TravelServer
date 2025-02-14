@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Tour } from './tours.schema';
+import { TourDto } from './dto/tour.dto';
 
 @Injectable()
 export class ToursService {
@@ -13,5 +14,14 @@ export class ToursService {
       .skip((page - 1) * limit)
       .limit(limit)
       .exec();
+  }
+
+  async getTourById(id: Types.ObjectId) {
+    return this.tourModel.findById(id);
+  }
+
+  async create(tourBody: TourDto) {
+    const newTour = new this.tourModel(tourBody);
+    return newTour.save();
   }
 }

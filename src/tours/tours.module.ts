@@ -8,5 +8,6 @@ import { Tour, TourSchema } from './tours.schema';
   imports: [MongooseModule.forFeature([{ name: Tour.name, schema: TourSchema }])],
   controllers: [ToursController],
   providers: [ToursService],
+  exports: [ToursService],
 })
 export class ToursModule {}

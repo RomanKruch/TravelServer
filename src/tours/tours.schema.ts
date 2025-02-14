@@ -1,7 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-@Schema()
+class Cords {
+  @Prop({ required: true })
+  lat: number;
+  @Prop({ required: true })
+  lng: number;
+}
+
+@Schema({ versionKey: false })
 export class Tour extends Document {
   @Prop({ required: true })
   title: string;
@@ -21,8 +28,8 @@ export class Tour extends Document {
   @Prop()
   id: string;
 
-  @Prop({ type: Object })
-  cords: { lat: number; lng: number };
+  @Prop({ type: Cords })
+  cords: Cords;
 }
 
 export const TourSchema = SchemaFactory.createForClass(Tour);
