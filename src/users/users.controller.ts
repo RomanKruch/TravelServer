@@ -13,16 +13,16 @@ export class UsersController {
   @Post('like/:tourId')
   @UseGuards(new JwtGuard(JwtStrategy))
   async toggleLike(@Req() req: UserRequest, @Param('tourId') tourId: string) {
-    const isInLiked = req.user.likedTours.includes(new Types.ObjectId(tourId));
+    const isInLiked = req.user.likedTours.some(tour => tour._id.toString() === tourId);
 
     if (isInLiked) {
-      const res = await this.usersService.removeFromLiked(req.user, new Types.ObjectId(tourId));
+      const res = await this.usersService.removeFromLiked(req.user, tourId);
       return {
         id: res,
       };
     } else {
-      const res = await this.usersService.addToLiked(req.user, new Types.ObjectId(tourId));
-      const tour = this.toursService.getTourById(res);
+      const res = await this.usersService.addToLiked(req.user, tourId);
+      const tour = await this.toursService.getTourById(res);
       return {
         tour,
       };
@@ -31,11 +31,5 @@ export class UsersController {
   // @Get(':email')
   // async getUserByEmail(@Param('email') email: string) {
   //   return this.usersService.findByEmail(email);
-  // }
-
-  // @UseGuards(JwtAuthGuard)
-  // @Post('like/:tourId')
-  // async toggleLike(@Req() req, @Param('tourId') tourId: string) {
-  //   return this.usersService.toggleLikeTour(req.user.userId, tourId);
   // }
 }

@@ -8,7 +8,7 @@ class Cords {
   lng: number;
 }
 
-@Schema()
+@Schema({ versionKey: false })
 export class Tour extends Document {
   @Prop({ required: true })
   title: string;

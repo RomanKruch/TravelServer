@@ -17,7 +17,7 @@ export class UsersService {
   }
 
   async create(userBody: RegisterDto) {
-    const newUser = new this.userModel({ ...userBody, token: null, likedTours: [] });
+    const newUser = new this.userModel({ ...userBody, token: null, likedTours: [], role: 'user' });
     return newUser.save();
   }
 
@@ -25,16 +25,16 @@ export class UsersService {
     await this.userModel.findOneAndUpdate({ _id }, { token });
   }
 
-  async addToLiked(user: User, tourId: Types.ObjectId) {
+  async addToLiked(user: User, tourId: string) {
     await this.userModel.findByIdAndUpdate(user._id, {
-      likedTours: [...user.likedTours, tourId],
+      likedTours: [...user.likedTours, new Types.ObjectId(tourId)],
     });
-    return tourId;
+    return new Types.ObjectId(tourId);
   }
 
-  async removeFromLiked(user: User, tourId: Types.ObjectId) {
+  async removeFromLiked(user: User, tourId: string) {
     await this.userModel.findByIdAndUpdate(user._id, {
-      likedTours: user.likedTours.filter(tour => tour._id !== tourId),
+      likedTours: user.likedTours.filter(tour => tour._id.toString() !== tourId),
     });
     return tourId;
   }

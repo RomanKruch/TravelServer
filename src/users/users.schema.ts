@@ -23,6 +23,9 @@ export class User extends Document {
 
   @Prop({ type: Types.ObjectId })
   likedTours: Types.ObjectId[];
+
+  @Prop()
+  role: 'user' | 'admin'
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
