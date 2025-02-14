@@ -25,15 +25,17 @@ export class UsersService {
     await this.userModel.findOneAndUpdate({ _id }, { token });
   }
 
-  // async toggleLikeTour(userId: string, tourId: string) {
-  //   const isLiked = user.likedTours.includes(tourId);
-  //   if (isLiked) {
-  //     user.likedTours = user.likedTours.filter(_id => _id !== tourId);
-  //   } else {
-  //     user.likedTours.push(tourId);
-  //   }
+  async addToLiked(user: User, tourId: Types.ObjectId) {
+    await this.userModel.findByIdAndUpdate(user._id, {
+      likedTours: [...user.likedTours, tourId],
+    });
+    return tourId;
+  }
 
-  //   await user.save();
-  //   return { likedTours: user.likedTours };
-  // }
+  async removeFromLiked(user: User, tourId: Types.ObjectId) {
+    await this.userModel.findByIdAndUpdate(user._id, {
+      likedTours: user.likedTours.filter(tour => tour._id !== tourId),
+    });
+    return tourId;
+  }
 }

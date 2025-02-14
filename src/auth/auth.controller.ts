@@ -20,10 +20,7 @@ import { UserRequest } from 'src/types/userRequest';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private jwtService: JwtService,
-    private usersService: UsersService,
-  ) {}
+  constructor(private jwtService: JwtService, private usersService: UsersService) {}
 
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
@@ -78,6 +75,7 @@ export class AuthController {
     return {
       userInfo: req.user.userInfo,
       token: req.user.token,
+      likedTours: req.user.likedTours,
     };
   }
 }

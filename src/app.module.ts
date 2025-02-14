@@ -13,8 +13,7 @@ import { ToursModule } from './tours/tours.module';
     MongooseModule.forRoot(process.env.MONGO_URI),
     AuthModule,
     UsersModule,
-
-    // ToursModule,
+    ToursModule,
   ],
   controllers: [AppController],
   providers: [AppService],
