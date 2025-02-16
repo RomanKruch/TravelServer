@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { genSalt, hash } from 'bcrypt';
+import { Tour } from 'src/tours/tours.schema';
 
 class UserInfo {
   @Prop({ required: true })
@@ -21,11 +22,11 @@ export class User extends Document {
   @Prop()
   token: string | null;
 
-  @Prop({ type: Types.ObjectId })
+  @Prop({ type: [{ type: Types.ObjectId, ref: Tour.name }] })
   likedTours: Types.ObjectId[];
 
   @Prop()
-  role: 'user' | 'admin'
+  role: 'user' | 'admin';
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

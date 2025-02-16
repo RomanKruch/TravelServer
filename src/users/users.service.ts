@@ -3,17 +3,25 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { User } from './users.schema';
 import { RegisterDto } from 'src/auth/dto/auth.dto';
+import { Tour } from 'src/tours/tours.schema';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async findById(id: Types.ObjectId) {
-    return this.userModel.findOne({ _id: id });
+    return await this.userModel
+      .findById(id)
+      .select('-password')
+      .populate({
+        path: 'likedTours',
+        model: Tour.name,
+      })
+      .exec();
   }
 
   async findByEmail(email: string) {
-    return this.userModel.findOne({ 'userInfo.email': email });
+    return this.userModel.findOne({ 'userInfo.email': email }).exec();
   }
 
   async create(userBody: RegisterDto) {
@@ -22,7 +30,14 @@ export class UsersService {
   }
 
   async updateToken(_id: Types.ObjectId, token: string | null) {
-    await this.userModel.findOneAndUpdate({ _id }, { token });
+    return await this.userModel
+      .findOneAndUpdate({ _id }, { token })
+      .select('-password')
+      .populate({
+        path: 'likedTours',
+        model: Tour.name,
+      })
+      .exec();
   }
 
   async addToLiked(user: User, tourId: string) {

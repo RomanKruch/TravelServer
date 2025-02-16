@@ -54,11 +54,10 @@ export class AuthController {
     const secret = process.env.SECRET;
     const token = await this.jwtService.signAsync({ _id: user.id }, { secret });
 
-    this.usersService.updateToken(user.id, token);
+    const currentUser = await this.usersService.updateToken(user.id, token);
+    currentUser.token = token;
 
-    return {
-      token,
-    };
+    return currentUser;
   }
 
   @Post('logout')
@@ -72,10 +71,6 @@ export class AuthController {
   @Get('refresh')
   @UseGuards(new JwtGuard(JwtStrategy))
   refresh(@Request() req: UserRequest) {
-    return {
-      userInfo: req.user.userInfo,
-      token: req.user.token,
-      likedTours: req.user.likedTours,
-    };
+    return req.user;
   }
 }
