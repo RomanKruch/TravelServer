@@ -1,9 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { User } from './users.schema';
 import { RegisterDto } from 'src/auth/dto/auth.dto';
-import { Tour } from 'src/tours/tours.schema';
 
 @Injectable()
 export class UsersService {
@@ -15,7 +14,7 @@ export class UsersService {
       .select('-password')
       .populate({
         path: 'likedTours',
-        model: Tour.name,
+        model: 'Tour',
       })
       .exec();
   }
@@ -35,7 +34,7 @@ export class UsersService {
       .select('-password')
       .populate({
         path: 'likedTours',
-        model: Tour.name,
+        model: 'Tour',
       })
       .exec();
   }

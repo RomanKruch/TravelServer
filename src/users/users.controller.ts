@@ -1,9 +1,8 @@
-import { Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Controller, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { UserRequest } from 'src/types/userRequest';
-import { Types } from 'mongoose';
 import { ToursService } from 'src/tours/tours.service';
 
 @Controller('users')
@@ -23,13 +22,7 @@ export class UsersController {
     } else {
       const res = await this.usersService.addToLiked(req.user, tourId);
       const tour = await this.toursService.getTourById(res);
-      return {
-        tour,
-      };
+      return tour;
     }
   }
-  // @Get(':email')
-  // async getUserByEmail(@Param('email') email: string) {
-  //   return this.usersService.findByEmail(email);
-  // }
 }

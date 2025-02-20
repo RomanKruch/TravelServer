@@ -40,6 +40,7 @@ export class AuthController {
     return {
       userInfo: newUser.userInfo,
       token,
+      likedTours: [],
     };
   }
 

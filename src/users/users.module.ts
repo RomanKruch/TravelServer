@@ -5,7 +5,6 @@ import { UsersController } from './users.controller';
 import { User, UserSchema } from './users.schema';
 import { ToursService } from 'src/tours/tours.service';
 import { Tour, TourSchema } from 'src/tours/tours.schema';
-import { ToursModule } from 'src/tours/tours.module';
 
 @Module({
   imports: [
