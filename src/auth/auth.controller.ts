@@ -35,13 +35,7 @@ export class AuthController {
     const secret = process.env.SECRET;
     const token = await this.jwtService.signAsync({ _id: newUser.id }, { secret });
 
-    await this.usersService.updateToken(newUser.id, token);
-
-    return {
-      userInfo: newUser.userInfo,
-      token,
-      likedTours: [],
-    };
+    return await this.usersService.updateToken(newUser.id, token);
   }
 
   @Post('login')
@@ -55,10 +49,7 @@ export class AuthController {
     const secret = process.env.SECRET;
     const token = await this.jwtService.signAsync({ _id: user.id }, { secret });
 
-    const currentUser = await this.usersService.updateToken(user.id, token);
-    currentUser.token = token;
-
-    return currentUser;
+    return await this.usersService.updateToken(user.id, token);
   }
 
   @Post('logout')
