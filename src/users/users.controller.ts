@@ -1,9 +1,10 @@
-import { Controller, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { BadRequestException, Controller, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { UserRequest } from 'src/types/userRequest';
 import { ToursService } from 'src/tours/tours.service';
+import { Types } from 'mongoose';
 
 @Controller('users')
 export class UsersController {
@@ -12,6 +13,10 @@ export class UsersController {
   @Post('like/:tourId')
   @UseGuards(new JwtGuard(JwtStrategy))
   async toggleLike(@Req() req: UserRequest, @Param('tourId') tourId: string) {
+    if (!Types.ObjectId.isValid(tourId)) {
+      throw new BadRequestException('Invalid tour ID format');
+    }
+
     const isInLiked = req.user.likedTours.some(tour => tour._id.toString() === tourId);
 
     if (isInLiked) {

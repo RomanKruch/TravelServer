@@ -6,7 +6,7 @@ import { TourDto } from './dto/tour.dto';
 
 interface TourFilters {
   price?: number;
-  name?: string;
+  title?: string;
   location?: string;
 }
 
@@ -20,13 +20,13 @@ export class ToursService {
     if (filters.price) {
       query.price = { $lte: filters.price }; // Find tours with price <= given value
     }
-    if (filters.name) {
-      query.title = { $regex: filters.name, $options: 'i' }; // Case-insensitive search
+    if (filters.title) {
+      query.title = { $regex: filters.title, $options: 'i' }; // Case-insensitive search
     }
     if (filters.location) {
       query.location = { $regex: filters.location, $options: 'i' };
     }
-    
+
     return this.tourModel
       .find(query)
       .skip((page - 1) * limit)

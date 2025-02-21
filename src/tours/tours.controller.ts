@@ -8,6 +8,8 @@ import {
   Body,
   ForbiddenException,
   Param,
+  BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { ToursService } from './tours.service';
 import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -25,12 +27,12 @@ export class ToursController {
     @Query('page') page = 1,
     @Query('limit') limit = 6,
     @Query('price') price?: string,
-    @Query('name') name?: string,
+    @Query('title') title?: string,
     @Query('location') location?: string,
   ) {
     const filters = {
       price: price ? Number(price) : undefined,
-      name,
+      title,
       location,
     };
 
@@ -39,7 +41,17 @@ export class ToursController {
 
   @Get(':id')
   async getTourById(@Param('id') id: string) {
-    return this.toursService.getTourById(new Types.ObjectId(id));
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException('Invalid tour ID format');
+    }
+
+    const tour = await this.toursService.getTourById(new Types.ObjectId(id));
+
+    if (!tour) {
+      throw new NotFoundException('Invalid tour ID format');
+    }
+
+    return tour;
   }
 
   @Post()
