@@ -39,6 +39,11 @@ export class ToursController {
     return this.toursService.getTours(+page, +limit, filters);
   }
 
+  @Get('cords')
+  async getTourCoordinates() {
+    return this.toursService.getTourCords();
+  }
+
   @Get(':id')
   async getTourById(@Param('id') id: string) {
     if (!Types.ObjectId.isValid(id)) {

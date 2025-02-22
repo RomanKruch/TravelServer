@@ -27,15 +27,26 @@ export class ToursService {
       query.location = { $regex: filters.location, $options: 'i' };
     }
 
-    return this.tourModel
-      .find(query)
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .exec();
+    const skip = (page - 1) * limit;
+
+    const totalTours = await this.tourModel.countDocuments(query);
+    const totalPages = Math.ceil(totalTours / limit);
+
+    const tours = await this.tourModel.find(query).skip(skip).limit(limit).exec();
+
+    return {
+      tours,
+      totalPages,
+      totalTours,
+    };
   }
 
   async getTourById(id: Types.ObjectId) {
     return this.tourModel.findById(id).exec();
+  }
+
+  async getTourCords() {
+    return this.tourModel.find({}, { cords: 1, _id: 1 }).lean();
   }
 
   async create(tourBody: TourDto) {
