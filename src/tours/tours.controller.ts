@@ -17,6 +17,7 @@ import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { UserRequest } from 'src/types/userRequest';
 import { TourDto } from './dto/tour.dto';
 import { Types } from 'mongoose';
+import { AdminGuard } from 'src/auth/guards/admin.guard';
 
 @Controller('tours')
 export class ToursController {
@@ -60,12 +61,8 @@ export class ToursController {
   }
 
   @Post()
-  @UseGuards(new JwtGuard(JwtStrategy))
+  @UseGuards(new JwtGuard(JwtStrategy), AdminGuard)
   async createTour(@Request() req: UserRequest, @Body() tourDto: TourDto) {
-    if (req.user.role !== 'admin') {
-      throw new ForbiddenException('You are not ADMIN!');
-    }
-
     const newTour = await this.toursService.create(tourDto);
     return {
       newTour,
