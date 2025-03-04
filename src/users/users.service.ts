@@ -24,8 +24,12 @@ export class UsersService {
     return this.userModel.findOne({ 'userInfo.email': email }).exec();
   }
 
+  async getPassword(id: Types.ObjectId) {
+    return (await this.userModel.findById(id)).password;
+  }
+
   async create(userBody: RegisterDto) {
-    const newUser = new this.userModel({ ...userBody, token: null, likedTours: [], role: 'user' });
+    const newUser = new this.userModel(userBody);
     return newUser.save();
   }
 
@@ -47,10 +51,10 @@ export class UsersService {
       .exec();
   }
 
-  async updateToken(_id: Types.ObjectId, token: string | null) {
+  async updateToken(id: Types.ObjectId, token: string | null) {
     return await this.userModel
-      .findOneAndUpdate(
-        { _id },
+      .findByIdAndUpdate(
+        id,
         { token },
         {
           new: true,
@@ -65,6 +69,14 @@ export class UsersService {
       .exec();
   }
 
+  async updatePassword(id: Types.ObjectId, password: string) {
+    return this.userModel.findByIdAndUpdate(id, { password });
+  }
+
+  async countTotalViewed(id: Types.ObjectId) {
+    return this.userModel.findByIdAndUpdate(id, { $inc: { totalToursViewed: 1 } });
+  }
+
   async addToLiked(user: User, tourId: string) {
     await this.userModel.findByIdAndUpdate(user._id, {
       likedTours: [...user.likedTours, new Types.ObjectId(tourId)],
@@ -77,5 +89,9 @@ export class UsersService {
       likedTours: user.likedTours.filter(tour => tour._id.toString() !== tourId),
     });
     return tourId;
+  }
+
+  async deleteUser(id: string) {
+    return this.userModel.findByIdAndDelete(id);
   }
 }

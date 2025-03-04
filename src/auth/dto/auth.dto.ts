@@ -13,11 +13,11 @@ class UserInfoDto {
 
 export class RegisterDto {
   @ValidateNested()
-  @Type(() => UserInfoDto) 
+  @Type(() => UserInfoDto)
   userInfo: UserInfoDto;
 
   @IsString()
-  @MinLength(8) 
+  @MinLength(8)
   @IsNotEmpty()
   password: string;
 }

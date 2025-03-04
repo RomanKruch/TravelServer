@@ -43,7 +43,7 @@ export class AuthController {
     const user = await this.usersService.findByEmail(loginDto.email);
 
     if (!user || !(await compare(loginDto.password, user.password))) {
-      throw new UnauthorizedException('Unauthorized');
+      throw new UnauthorizedException('Invalid email or password');
     }
 
     const secret = process.env.SECRET;

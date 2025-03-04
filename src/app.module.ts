@@ -15,7 +15,7 @@ import { SubscribeModule } from './subscribe/subscribe.module';
     AuthModule,
     UsersModule,
     ToursModule,
-    SubscribeModule
+    SubscribeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
