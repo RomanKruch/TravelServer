@@ -77,4 +77,16 @@ export class ToursController {
       newTour,
     };
   }
+
+  @Post('arr')
+  @UseGuards(new JwtGuard(JwtStrategy), AdminGuard)
+  async createToursArr(@Body() toursDto: TourDto[]) {
+    const createdTours = await Promise.all(
+      toursDto.map(async (item) => {
+        return this.toursService.create(item);
+      })
+    );
+  
+    return createdTours;
+  }
 }
