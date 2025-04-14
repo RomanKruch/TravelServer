@@ -22,7 +22,10 @@ import { compare, genSalt, hash } from 'bcrypt';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService, private toursService: ToursService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly toursService: ToursService,
+  ) {}
 
   @Patch()
   @UseGuards(new JwtGuard(JwtStrategy))

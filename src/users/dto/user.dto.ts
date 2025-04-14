@@ -1,21 +1,21 @@
-import { IsString, IsEmail, IsOptional, MinLength } from 'class-validator';
+import { IsOptional, MinLength, Validate, IsNotEmpty } from 'class-validator';
+import { CustomEmailValidator } from 'src/helpers/customEmailValidation';
 
 export class UpdateUserDto {
   @IsOptional()
-  @IsString()
   name?: string;
 
   @IsOptional()
-  @IsEmail()
+  @Validate(CustomEmailValidator)
   email?: string;
 }
 
 export class ChangePasswordDto {
-  @IsString()
-  @MinLength(8)
+  @IsNotEmpty({ message: 'OldPassword is required!' })
+  @MinLength(8, { message: 'OldPassword length must be 8 or more!' })
   oldPassword: string;
 
-  @IsString()
-  @MinLength(8)
+  @IsNotEmpty({ message: 'NewPassword is required!' })
+  @MinLength(8, { message: 'NewPassword length must be 8 or more!' })
   newPassword: string;
 }
